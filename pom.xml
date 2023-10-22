@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>bigdata-procamp.kafka</groupId>
+	<artifactId>bitstamp-kafka-consumer</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>bitstamp-kafka-consumer</name>
+	<description>This app consumes messages from gcp dataproc kafka</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<kafka.version>2.1.1</kafka.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka-clients</artifactId>
+			<version>${kafka.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.1.1</version>
+				<configuration>
+					<!-- get all project dependencies -->
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<!-- bind to the packaging phase -->
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- build an uber jar -->
+<!--			<plugin>-->
+<!--				<groupId>org.apache.maven.plugins</groupId>-->
+<!--				<artifactId>maven-shade-plugin</artifactId>-->
+<!--				<version>2.3</version>-->
+<!--				<configuration>-->
+<!--					<transformers>-->
+<!--						&lt;!&ndash; Keep us from getting a can't overwrite file error &ndash;&gt;-->
+<!--						<transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer"/>-->
+<!--						&lt;!&ndash; main class so it is executable &ndash;&gt;-->
+<!--						<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
+<!--							<mainClass>kafka.ProducerConsumer</mainClass>-->
+<!--						</transformer>-->
+<!--					</transformers>-->
+<!--					&lt;!&ndash; Keep us from getting a bad signature error &ndash;&gt;-->
+<!--					<filters>-->
+<!--						<filter>-->
+<!--							<artifact>*:*</artifact>-->
+<!--							<excludes>-->
+<!--								<exclude>META-INF/*.SF</exclude>-->
+<!--								<exclude>META-INF/*.DSA</exclude>-->
+<!--								<exclude>META-INF/*.RSA</exclude>-->
+<!--							</excludes>-->
+<!--						</filter>-->
+<!--					</filters>-->
+<!--				</configuration>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<phase>package</phase>-->
+<!--						<goals>-->
+<!--							<goal>shade</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--			</plugin>-->
+		</plugins>
+	</build>
+
+
+</project>
