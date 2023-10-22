@@ -28,6 +28,17 @@ public class BitStampKafkaConsumer {
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
+//        to enable at most once strategy just set autocommit to true and comment out following properties
+
+//        configuring at least once semantic
+        properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
+        // Make Auto commit interval to a big number so that auto commit does not happen,
+        // we are going to control the offset commit via consumer.commitSync(); after processing             // message.
+        properties.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "999999999999");
+
+        // This is how to control number of messages being read in each poll
+        properties.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, "135");
+
         // create consumer
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 
@@ -42,6 +53,11 @@ public class BitStampKafkaConsumer {
                 log.info("Key: " + record.key() + ", Value: " + record.value());
                 log.info("Partition: " + record.partition() + ", Offset:" + record.offset());
             }
+
+//            at least once strategy
+//             Below call is important to control the offset commit. Do this call after you
+//             finish processing the business process.
+            consumer.commitSync();
         }
 
     }
