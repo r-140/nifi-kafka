@@ -57,7 +57,7 @@ public class BitStampKafkaConsumer {
             throw new IllegalArgumentException("topic name is required");
         }
 
-        return args[0];
+        return args[0].trim();
     }
 
     private static void process(ConsumerRecords<String, String> records) throws JsonProcessingException {
