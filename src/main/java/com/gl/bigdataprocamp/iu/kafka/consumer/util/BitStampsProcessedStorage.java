@@ -19,8 +19,7 @@ public enum BitStampsProcessedStorage {
                     }
                 }
             );
-    private TreeSet<BitStampTrn> bitStampTrns =
-            new TreeSet<>(PRICE_COMPARATOR.reversed());
+    private TreeSet<BitStampTrn> bitStampTrns = new TreeSet<>(PRICE_COMPARATOR.reversed());
 
     public TreeSet<BitStampTrn> getBitStampTrns() {
         return bitStampTrns;
