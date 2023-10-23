@@ -22,21 +22,16 @@ public class BitStampKafkaConsumer {
     public static void main(String[] args) {
         final String topicName = getTopicName(args);
 
+        log.info("Storage size " + BitStampsProcessedStorage.INSTANCE.getBitStampTrns());
+
         final KafkaConsumer<String, String> consumer = new KafkaConsumer<>(getConsumerConfig());
 
         consumer.subscribe(Collections.singletonList(topicName));
-
-//        read from beginning
-//        consumer.seekToBeginning(consumer.assignment());
 
         while(true){
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(TIMEOUT));
             int polledRecords = records.count();
             log.info("records after poll " + polledRecords);
-//            if(polledRecords == 0) {
-//                log.info("no records polled from topic, exiting");
-//                break;
-//            }
             if(polledRecords > 0) {
                 try {
                     process(records);
@@ -51,7 +46,6 @@ public class BitStampKafkaConsumer {
                 consumer.commitSync();
             }
         }
-//        log.info("all messages from topic " + topicName + " have been processed");
     }
 
     private static String getTopicName(String[] args){
