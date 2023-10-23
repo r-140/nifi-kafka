@@ -180,7 +180,7 @@
                 </entry>
                 <entry>
                     <key>websocket-uri</key>
-                    <value>wss://ws.bitstamp.net</value>
+                    <value>wss://ws.bitstampData.net</value>
                 </entry>
                 <entry>
                     <key>ssl-context-service</key>
@@ -290,7 +290,7 @@
                 </entry>
                 <entry>
                     <key>Truststore Filename</key>
-                    <value>/opt/gl-bigdata-procamp/bitstamp.truststore</value>
+                    <value>/opt/gl-bigdata-procamp/bitstampData.truststore</value>
                 </entry>
                 <entry>
                     <key>Truststore Password</key>
@@ -526,7 +526,7 @@
                     </entry>
                     <entry>
                         <key>topic</key>
-                        <value>bitstamp-trn-topic</value>
+                        <value>bitstampData-trn-topic</value>
                     </entry>
                     <entry>
                         <key>acks</key>

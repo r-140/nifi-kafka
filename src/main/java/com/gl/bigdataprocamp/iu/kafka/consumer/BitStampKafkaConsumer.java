@@ -1,48 +1,47 @@
 package com.gl.bigdataprocamp.iu.kafka.consumer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gl.bigdataprocamp.iu.kafka.consumer.dto.Bitstamp;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
+import com.gl.bigdataprocamp.iu.kafka.consumer.dto.BitStampTrn;
+import com.gl.bigdataprocamp.iu.kafka.consumer.util.BitStampsProcessedStorage;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.util.Collections;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 import static com.gl.bigdataprocamp.iu.kafka.consumer.config.ConsumerConfigHelper.getConsumerConfig;
+import static com.gl.bigdataprocamp.iu.kafka.consumer.util.JsonConverter.convertRecordToDto;
 
 public class BitStampKafkaConsumer {
     private final static Logger log = Logger.getLogger("BitStampKafkaConsumer");
 
     //    todo pass topic as params
-    private static String topic = "bitstamp-trn-topic";
+    private static String TOPIC_NAME = "bitstamp-trn-topic";
 
     private static Integer TIMEOUT = 100;
 
     public static void main(String[] args) {
-        log.info("starting consuming massages");
-
         // create consumer
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(getConsumerConfig());
+        final KafkaConsumer<String, String> consumer = new KafkaConsumer<>(getConsumerConfig());
 
-        consumer.subscribe(Collections.singletonList(topic));
+        consumer.subscribe(Collections.singletonList(TOPIC_NAME));
 
-        // poll for new data
         while(true){
-            ConsumerRecords<String, String> records =  consumer.poll(Duration.ofMillis(TIMEOUT));
+            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(TIMEOUT));
+
+            log.info("records after poll " + records.count());
 
             try {
                 process(records);
+                printResult();
             } catch (JsonProcessingException e) {
                 log.info("Exception has been thrown while processing the record " + e.getMessage());
                 throw new RuntimeException(e);
             }
+
+            log.info("finishing processing polled records");
 //            at least once strategy
             consumer.commitSync();
         }
@@ -54,15 +53,19 @@ public class BitStampKafkaConsumer {
 
 //            log.info("Partition: " + record.partition() + ", Offset:" + record.offset());
 
-            final Bitstamp bitstamp = convertRecordToDto(record);
+            final BitStampTrn bitStampTrn = convertRecordToDto(record.value());
 
-            log.info("Converted record " + bitstamp);
+            addBitStampTrnToCollection(bitStampTrn);
+//            log.info("Converted record " + bitStampTrn);
         }
     }
 
-    private static Bitstamp convertRecordToDto(ConsumerRecord<String, String> record) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
+    private static void addBitStampTrnToCollection(BitStampTrn bitStampTrn) {
+        BitStampsProcessedStorage.INSTANCE.addBitStampTrnToCollection(bitStampTrn);
+    }
 
-        return mapper.readValue(record.value(), Bitstamp.class);
+    private static void printResult(){
+        log.info("The bitstamp transactions with 10 highest prices: \n"
+                + BitStampsProcessedStorage.INSTANCE.getBitStampTrns());
     }
 }
