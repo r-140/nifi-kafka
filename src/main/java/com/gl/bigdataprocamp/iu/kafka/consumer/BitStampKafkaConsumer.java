@@ -33,23 +33,25 @@ public class BitStampKafkaConsumer {
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(TIMEOUT));
             int polledRecords = records.count();
             log.info("records after poll " + polledRecords);
-            if(polledRecords == 0) {
-                log.info("no records polled from topic, exiting");
-                break;
-            }
-            try {
-                process(records);
-                printResult();
-            } catch (JsonProcessingException e) {
-                log.info("Exception has been thrown while processing the record " + e.getMessage());
-                throw new RuntimeException(e);
-            }
+//            if(polledRecords == 0) {
+//                log.info("no records polled from topic, exiting");
+//                break;
+//            }
+            if(polledRecords > 0) {
+                try {
+                    process(records);
+                    printResult();
+                } catch (JsonProcessingException e) {
+                    log.info("Exception has been thrown while processing the record " + e.getMessage());
+                    throw new RuntimeException(e);
+                }
 
-            log.info("finishing processing polled records");
+                log.info("finishing processing polled records");
 //            at least once strategy
-            consumer.commitSync();
+                consumer.commitSync();
+            }
         }
-        log.info("all messages from topic " + topicName + " have been processed");
+//        log.info("all messages from topic " + topicName + " have been processed");
     }
 
     private static String getTopicName(String[] args){

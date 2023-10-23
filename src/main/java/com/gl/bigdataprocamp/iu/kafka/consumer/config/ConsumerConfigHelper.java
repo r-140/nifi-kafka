@@ -4,13 +4,11 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.util.Properties;
-import java.util.UUID;
 
 public class ConsumerConfigHelper {
 
     private static final String BOOTSTRAP_SERVERS = "127.0.0.1:9092";
-
-    private static final String GROUP_ID = "bitstamp_group";
+    private static final String groupId = "bitstamp-trn-group";
 
     public static Properties getConsumerConfig(){
         // create consumer configs
@@ -18,8 +16,7 @@ public class ConsumerConfigHelper {
         properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, GROUP_ID);
-//        read from beginning
+        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
 //        configuring at least once semantic
