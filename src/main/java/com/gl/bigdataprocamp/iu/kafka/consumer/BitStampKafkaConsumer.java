@@ -17,22 +17,17 @@ import static com.gl.bigdataprocamp.iu.kafka.consumer.util.JsonConverter.convert
 public class BitStampKafkaConsumer {
     private final static Logger log = Logger.getLogger("BitStampKafkaConsumer");
 
-    //    todo pass topic as params
-    private static String TOPIC_NAME = "bitstamp-trn-topic";
-
     private static Integer TIMEOUT = 100;
 
     public static void main(String[] args) {
-        final String topicName = args[0];
+        final String topicName = getTopicName(args);
 
-        if(topicName == null || topicName.isEmpty()) {
-            throw new IllegalArgumentException("Topic name is required");
-        }
-
-        // create consumer
         final KafkaConsumer<String, String> consumer = new KafkaConsumer<>(getConsumerConfig());
 
-        consumer.subscribe(Collections.singletonList(TOPIC_NAME));
+        consumer.subscribe(Collections.singletonList(topicName));
+
+//        read from beginning
+        consumer.seekToBeginning(consumer.assignment());
 
         while(true){
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(TIMEOUT));
@@ -51,6 +46,14 @@ public class BitStampKafkaConsumer {
 //            at least once strategy
             consumer.commitSync();
         }
+    }
+
+    private static String getTopicName(String[] args){
+        if(args[0]==null || args[0].isEmpty()) {
+            throw new IllegalArgumentException("topic name is required");
+        }
+
+        return args[0];
     }
 
     private static void process(ConsumerRecords<String, String> records) throws JsonProcessingException {
