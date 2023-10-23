@@ -45,6 +45,7 @@ public class BitStampKafkaConsumer {
 //            at least once strategy
                 consumer.commitSync();
             }
+            log.info("Storage size ahter pull " + BitStampsProcessedStorage.INSTANCE.getBitStampTrns());
         }
     }
 

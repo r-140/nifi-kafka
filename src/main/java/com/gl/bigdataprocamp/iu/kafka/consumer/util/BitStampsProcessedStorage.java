@@ -28,7 +28,6 @@ public enum BitStampsProcessedStorage {
     public void addBitStampTrnToCollection(BitStampTrn bitStampTrn) {
         bitStampTrns.add(bitStampTrn);
         if(bitStampTrns.size() > MAX_RESULT) {
-            System.out.println("TRN HAS BEEN REMOVED " + bitStampTrns.last());
             bitStampTrns.remove(bitStampTrns.last());
         }
     }
