@@ -35,10 +35,9 @@ public class BitStampKafkaConsumer {
             if(polledRecords > 0) {
                 try {
                     process(records);
-                    printResult();
+//                    printResult();
                 } catch (JsonProcessingException e) {
                     log.info("Exception has been thrown while processing the record " + e.getMessage());
-                    throw new RuntimeException(e);
                 }
 
                 log.info("finishing processing polled records");
