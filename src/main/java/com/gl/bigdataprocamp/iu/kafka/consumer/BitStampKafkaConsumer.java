@@ -22,8 +22,6 @@ public class BitStampKafkaConsumer {
     public static void main(String[] args) {
         final String topicName = getTopicName(args);
 
-        log.info("Storage size " + BitStampsProcessedStorage.INSTANCE.getBitStampTrns());
-
         final KafkaConsumer<String, String> consumer = new KafkaConsumer<>(getConsumerConfig());
 
         consumer.subscribe(Collections.singletonList(topicName));
@@ -35,7 +33,7 @@ public class BitStampKafkaConsumer {
             if(polledRecords > 0) {
                 try {
                     process(records);
-//                    printResult();
+                    printResult();
                 } catch (JsonProcessingException e) {
                     log.info("Exception has been thrown while processing the record " + e.getMessage());
                 }
@@ -44,7 +42,6 @@ public class BitStampKafkaConsumer {
 //            at least once strategy
                 consumer.commitSync();
             }
-            log.info("Storage size ahter pull " + BitStampsProcessedStorage.INSTANCE.getBitStampTrns().size());
         }
     }
 
