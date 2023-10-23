@@ -31,9 +31,12 @@ public class BitStampKafkaConsumer {
 
         while(true){
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(TIMEOUT));
-
-            log.info("records after poll " + records.count());
-
+            int polledRecords = records.count();
+            log.info("records after poll " + polledRecords);
+            if(polledRecords == 0) {
+                log.info("no records polled from topic, exiting");
+                break;
+            }
             try {
                 process(records);
                 printResult();
@@ -46,6 +49,7 @@ public class BitStampKafkaConsumer {
 //            at least once strategy
             consumer.commitSync();
         }
+        log.info("all messages from topic " + topicName + " have been processed");
     }
 
     private static String getTopicName(String[] args){
@@ -58,14 +62,8 @@ public class BitStampKafkaConsumer {
 
     private static void process(ConsumerRecords<String, String> records) throws JsonProcessingException {
         for (ConsumerRecord<String, String> record : records){
-//            log.info("Key: " + record.key() + ", Value: " + record.value());
-
-//            log.info("Partition: " + record.partition() + ", Offset:" + record.offset());
-
             final BitStampTrn bitStampTrn = convertRecordToDto(record.value());
-
             addBitStampTrnToCollection(bitStampTrn);
-//            log.info("Converted record " + bitStampTrn);
         }
     }
 
@@ -74,7 +72,7 @@ public class BitStampKafkaConsumer {
     }
 
     private static void printResult(){
-        log.info("The bitstamp transactions with 10 highest prices: \n"
+        log.info("The bitStamp transactions with 10 highest prices: \n"
                 + BitStampsProcessedStorage.INSTANCE.getBitStampTrns());
     }
 }
