@@ -23,6 +23,12 @@ public class BitStampKafkaConsumer {
     private static Integer TIMEOUT = 100;
 
     public static void main(String[] args) {
+        final String topicName = args[0];
+
+        if(topicName == null || topicName.isEmpty()) {
+            throw new IllegalArgumentException("Topic name is required");
+        }
+
         // create consumer
         final KafkaConsumer<String, String> consumer = new KafkaConsumer<>(getConsumerConfig());
 
