@@ -27,7 +27,7 @@ public class BitStampKafkaConsumer {
         consumer.subscribe(Collections.singletonList(topicName));
 
 //        read from beginning
-        consumer.seekToBeginning(consumer.assignment());
+//        consumer.seekToBeginning(consumer.assignment());
 
         while(true){
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(TIMEOUT));
